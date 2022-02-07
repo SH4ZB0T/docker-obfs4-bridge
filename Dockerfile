@@ -53,5 +53,11 @@ RUN groupadd -g 101 tor && \
 COPY --from=tor-build /usr/local/bin/* /usr/local/bin/
 COPY --from=tor-build /usr/local/share/tor/* /usr/local/share/tor/
 COPY --from=obfs4-build /go/obfs4/obfs4proxy/obfs4proxy /usr/bin/
+COPY start-tor.sh /usr/local/bin
+COPY get-bridge-line /usr/local/bin
+
+RUN chmod 0755 /usr/local/bin/start-tor.sh /usr/local/bin/get-bridge-line
+
+USER tor
 
 CMD [ "/usr/local/bin/start-tor.sh" ]
