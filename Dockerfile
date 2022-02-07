@@ -42,7 +42,7 @@ RUN go build -o obfs4proxy/obfs4proxy ./obfs4proxy
 
 FROM debian:bullseye-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends libcap2-bin
+RUN apt-get update && apt-get install -y --no-install-recommends libcap2-bin libevent-2.1
 
 RUN groupadd -g 101 tor && \
     useradd -u 101 -g 101 -m -d /home/tor tor && \
