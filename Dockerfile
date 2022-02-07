@@ -42,6 +42,8 @@ RUN go build -o obfs4proxy/obfs4proxy ./obfs4proxy
 
 FROM debian:bullseye-slim
 
+RUN apt-get update && apt-get install -y --no-install-recommends libcap2-bin
+
 RUN groupadd -g 101 tor && \
     useradd -u 101 -g 101 -m -d /home/tor tor && \
 	mkdir -p /usr/local/bin \
@@ -55,6 +57,8 @@ COPY --from=tor-build /usr/local/share/tor/* /usr/local/share/tor/
 COPY --from=obfs4-build /go/obfs4/obfs4proxy/obfs4proxy /usr/bin/
 COPY start-tor.sh /usr/local/bin
 COPY get-bridge-line /usr/local/bin
+
+RUN setcap cap_net_bind_service=+ep /usr/bin/obfs4proxy
 
 RUN chmod 0755 /usr/local/bin/start-tor.sh /usr/local/bin/get-bridge-line
 
