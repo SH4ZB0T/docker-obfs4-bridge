@@ -49,7 +49,7 @@ RUN groupadd -g 101 tor && \
 	mkdir -p /usr/local/bin \
 	         /etc/tor \
 			 /usr/local/share/tor \
-			 /var/log/tor/log && \
+			 /var/log/tor && \
 	chown -R 101:101 /var/log/tor /usr/local/share/tor /etc/tor
 
 COPY --from=tor-build /usr/local/bin/* /usr/local/bin/
