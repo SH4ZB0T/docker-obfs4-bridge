@@ -1,36 +1,20 @@
-FROM debian:bullseye-slim AS tor-build
+FROM --platform=$BUILDPLATFORM debian:bullseye-slim AS tor-build
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    automake \
-    git \
-	gpg \
-	gpg-agent \
-	ca-certificates \
-	build-essential \
-	libevent-dev \
-	zlib1g-dev \
-	libssl-dev \
-	liblzma-dev \
-	libzstd-dev \
-	pkg-config \
-	python3
+ARG TARGETARCH
 
 RUN groupadd -g 101 tor && \
     useradd -u 101 -g 101 -m -d /home/tor tor
-	
+
+COPY install-multiarch-dependencies.sh /home/tor/
+RUN bash /home/tor/install-multiarch-dependencies.sh ${TARGETARCH}
+
 USER tor
 WORKDIR /home/tor
 
-RUN git clone -b tor-0.4.6.9 --single-branch https://git.torproject.org/tor.git
+COPY build-tor-multiarch.sh /home/tor/
+RUN bash build-tor-multiarch.sh ${TARGETARCH} tor-0.4.6.9
 
 WORKDIR /home/tor/tor
-RUN ./autogen.sh -i && \
-    ./configure --disable-asciidoc \
-                --disable-manpage \
-				--disable-html-manual \
-				--enable-zstd \
-				--enable-lzma && \
-	make
 
 USER root
 RUN make install
