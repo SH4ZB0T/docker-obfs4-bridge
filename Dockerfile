@@ -12,7 +12,7 @@ USER tor
 WORKDIR /home/tor
 
 COPY build-tor-multiarch.sh /home/tor/
-RUN bash build-tor-multiarch.sh ${TARGETARCH} tor-0.4.6.9
+RUN bash build-tor-multiarch.sh ${TARGETARCH} tor-0.4.6.10
 
 WORKDIR /home/tor/tor
 
