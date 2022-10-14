@@ -20,7 +20,7 @@ USER root
 RUN make install
 
 FROM golang:1.17-bullseye AS obfs4-build
-RUN git clone -b obfs4proxy-0.0.13 --single-branch https://gitlab.com/yawning/obfs4.git
+RUN git clone -b obfs4proxy-0.0.14 --single-branch https://gitlab.com/yawning/obfs4.git
 WORKDIR /go/obfs4/
 RUN go build -o obfs4proxy/obfs4proxy ./obfs4proxy
 
