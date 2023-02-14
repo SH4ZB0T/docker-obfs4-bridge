@@ -24,8 +24,6 @@ fi
 
 cat > /etc/tor/torrc << EOF
 RunAsDaemon 0
-# We don't need an open SOCKS port.
-SocksPort 0
 BridgeRelay 1
 Nickname ${NICK}
 Log notice file /var/log/tor/log
