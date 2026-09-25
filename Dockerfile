@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM debian:bullseye-slim AS tor-build
+FROM --platform=$BUILDPLATFORM debian:bookworm-slim AS tor-build
 
 ARG TARGETARCH
 
@@ -19,12 +19,12 @@ WORKDIR /home/tor/tor
 USER root
 RUN make install
 
-FROM golang:1.17-bullseye AS obfs4-build
+FROM golang:1.27.1-bookworm AS obfs4-build
 RUN git clone -b obfs4proxy-0.0.14 --single-branch https://gitlab.com/yawning/obfs4.git
 WORKDIR /go/obfs4/
 RUN go build -o obfs4proxy/obfs4proxy ./obfs4proxy
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends libcap2-bin libevent-2.1
 
