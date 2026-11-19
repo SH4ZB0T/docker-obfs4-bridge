@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM debian:bookworm-slim AS tor-build
+FROM --platform=$BUILDPLATFORM debian:trixie-slim AS tor-build
 
 ARG TARGETARCH
 
@@ -12,32 +12,32 @@ USER tor
 WORKDIR /home/tor
 
 COPY build-tor-multiarch.sh /home/tor/
-RUN bash build-tor-multiarch.sh ${TARGETARCH} tor-0.4.9.15
+RUN bash build-tor-multiarch.sh ${TARGETARCH} tor-0.4.9.17
 
 WORKDIR /home/tor/tor
 
 USER root
 RUN make install
 
-FROM golang:1.27.1-bookworm AS obfs4-build
+FROM golang:1.27.4-trixie AS obfs4-build
 RUN git clone -b obfs4proxy-0.0.14 --single-branch https://gitlab.com/yawning/obfs4.git
 WORKDIR /go/obfs4/
 RUN go build -o obfs4proxy/obfs4proxy ./obfs4proxy
 
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libcap2-bin \
-	libevent-2.1 \
-	libssl3
+	  libevent-2.1-7t64 \
+	  libssl3t64
 
 RUN groupadd -g 101 tor && \
     useradd -u 101 -g 101 -m -d /home/tor tor && \
-	mkdir -p /usr/local/bin \
-	         /etc/tor \
-			 /usr/local/share/tor \
-			 /var/log/tor && \
-	chown -R 101:101 /var/log/tor /usr/local/share/tor /etc/tor
+	  mkdir -p /usr/local/bin \
+	            /etc/tor \
+			        /usr/local/share/tor \
+			        /var/log/tor && \
+	  chown -R 101:101 /var/log/tor /usr/local/share/tor /etc/tor
 
 COPY --from=tor-build /usr/local/bin/* /usr/local/bin/
 COPY --from=tor-build /usr/local/share/tor/* /usr/local/share/tor/
