@@ -28,8 +28,8 @@ FROM debian:trixie-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libcap2-bin \
-	  libevent-2.1 \
-	  libssl3
+	  libevent-2.1-7t64 \
+	  libssl3t64
 
 RUN groupadd -g 101 tor && \
     useradd -u 101 -g 101 -m -d /home/tor tor && \
