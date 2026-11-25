@@ -43,13 +43,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzstd1 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -g 101 tor && \
-    useradd -u 101 -g 101 -m -d /home/tor tor && \
-    mkdir -p /usr/local/bin \
-              /etc/tor \
-              /usr/local/share/tor \
-              /var/log/tor && \
-    chown -R 101:101 /var/log/tor /usr/local/share/tor /etc/tor
+RUN groupadd -g 101 tor \
+    && useradd -m -u 101 -g 101 -s /bin/false -d /var/lib/tor tor \
+    && mkdir -p /etc/tor \
+                /usr/local/share/tor \
+                /var/log/tor \
+    && chown -R 101:101 /var/log/tor /usr/local/share/tor /etc/tor
 
 COPY --from=tor-build /usr/local/bin/* /usr/local/bin/
 COPY --from=tor-build /usr/local/share/tor/* /usr/local/share/tor/
