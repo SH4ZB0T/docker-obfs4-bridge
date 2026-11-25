@@ -2,6 +2,7 @@
 FROM --platform=$BUILDPLATFORM debian:trixie-slim AS tor-build
 
 ARG TARGETARCH
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN groupadd -g 101 tor && \
     useradd -u 101 -g 101 -m -d /home/tor tor
@@ -25,20 +26,22 @@ RUN git clone -b obfs4proxy-0.0.14 --single-branch https://gitlab.com/yawning/ob
 WORKDIR /go/obfs4/
 RUN go build -o obfs4proxy/obfs4proxy ./obfs4proxy
 
-FROM debian:trixie-slim
+FROM debian:trixie-slim AS final
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libcap2-bin \
-	  libevent-2.1-7t64 \
-	  libssl3t64
+    libevent-2.1-7t64 \
+    libssl3t64
 
 RUN groupadd -g 101 tor && \
     useradd -u 101 -g 101 -m -d /home/tor tor && \
-	  mkdir -p /usr/local/bin \
-	            /etc/tor \
-			        /usr/local/share/tor \
-			        /var/log/tor && \
-	  chown -R 101:101 /var/log/tor /usr/local/share/tor /etc/tor
+    mkdir -p /usr/local/bin \
+              /etc/tor \
+              /usr/local/share/tor \
+              /var/log/tor && \
+    chown -R 101:101 /var/log/tor /usr/local/share/tor /etc/tor
 
 COPY --from=tor-build /usr/local/bin/* /usr/local/bin/
 COPY --from=tor-build /usr/local/share/tor/* /usr/local/share/tor/
