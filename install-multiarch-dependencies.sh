@@ -16,8 +16,6 @@ apt-get update
 apt-get install -y --no-install-recommends \
     automake \
     git \
-    gpg \
-    gpg-agent \
     ca-certificates \
     build-essential \
     libevent-dev:${arch} \
