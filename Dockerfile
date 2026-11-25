@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM --platform=$BUILDPLATFORM debian:trixie-slim AS tor-build
 
 ARG TARGETARCH
