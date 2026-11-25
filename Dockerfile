@@ -21,10 +21,14 @@ WORKDIR /home/tor/tor
 USER root
 RUN make install
 
-FROM golang:1.27.4-trixie AS obfs4-build
+FROM --platform=$BUILDPLATFORM golang:1.27.4-trixie AS obfs4-build
+
+ARG TARGETOS
+ARG TARGETARCH
+
 RUN git clone -b obfs4proxy-0.0.14 --single-branch https://gitlab.com/yawning/obfs4.git
 WORKDIR /go/obfs4/
-RUN go build -o obfs4proxy/obfs4proxy ./obfs4proxy
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o obfs4proxy/obfs4proxy ./obfs4proxy
 
 FROM debian:trixie-slim AS final
 
