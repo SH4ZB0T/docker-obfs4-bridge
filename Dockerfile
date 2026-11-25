@@ -33,7 +33,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libcap2-bin \
     libevent-2.1-7t64 \
-    libssl3t64
+    zlib1g \
+    libssl3t64 \
+    liblzma5 \
+    libzstd1 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g 101 tor && \
     useradd -u 101 -g 101 -m -d /home/tor tor && \
